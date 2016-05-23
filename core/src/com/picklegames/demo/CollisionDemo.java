@@ -2,8 +2,6 @@ package com.picklegames.demo;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.picklegames.shape.Circle;
 import com.picklegames.shape.Rectangle;
@@ -34,9 +32,7 @@ public class CollisionDemo {
 	
 	public void update(float dt){
 		if (testState.equals(TestState.RectanglePoint)) {
-
-			if (rectangle0.pointInRange(Gdx.input.getX(), -Gdx.input.getY() + Gdx.graphics.getHeight(),
-					rectangle0)) {
+			if (rectangle0.collidedPoint(Gdx.input.getX(), -Gdx.input.getY() + Gdx.graphics.getHeight())) {
 				sr.setColor(Color.RED);
 			} else {
 				sr.setColor(Color.SKY);
@@ -45,15 +41,14 @@ public class CollisionDemo {
 			rectangle1.setPosition(Gdx.input.getX() - rectangle1.getWidth() / 2,
 					-Gdx.input.getY() + Gdx.graphics.getHeight() - rectangle1.getHeight() / 2);
 			
-			if (rectangle0.rectIntersect(rectangle0, rectangle1)) {
+			if (rectangle0.collidedShape(rectangle1)) {
 				sr.setColor(Color.RED);
 			} else {
 				sr.setColor(Color.CYAN);
 			}
 		} else if (testState.equals(TestState.CirclePoint)) {
 
-			if (circle0.circlePointCollision(Gdx.input.getX(), -Gdx.input.getY() + Gdx.graphics.getHeight(),
-					circle0)) {
+			if (circle0.collidedPoint(Gdx.input.getX(), -Gdx.input.getY() + Gdx.graphics.getHeight())) {
 				sr.setColor(Color.RED);
 			} else {
 				sr.setColor(Color.SKY);
@@ -64,7 +59,7 @@ public class CollisionDemo {
 			
 			circle1.update();
 
-			if (circle0.circleCollision(circle0, circle1)) {
+			if (circle0.collidedShape(circle1)) {
 				sr.setColor(Color.RED);
 			} else {
 				sr.setColor(Color.CYAN);

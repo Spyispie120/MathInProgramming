@@ -24,20 +24,22 @@ public class Circle extends Shape{
 	
 	public void render(ShapeRenderer sr){
 		sr.begin(ShapeType.Filled);
-		//sr.setColor(color);
+		sr.setColor(color);
 		sr.circle(position.x, position.y, radius);
 		sr.end();
 	}
 	
-	public boolean circleCollision(Circle circle0, Circle circle1){
-		return distance(circle0.position.x, circle0.position.y, circle1.position.x, circle1.position.y) <=  circle0.radius + circle1.radius;
-	}
-	
-	public boolean circlePointCollision(float x, float y, Circle c){
-		return distance(x, y, c.position.x, c.position.y) < c.radius;
+	@Override
+	public boolean collidedShape(Shape shape) {
+		return distance(this.position.x, this.position.y, shape.position.x, shape.position.y) <=  this.radius + ((Circle)shape).radius;
 	}
 
-	public float distance(float x0, float y0, float x1, float y1) {
+	@Override
+	public boolean collidedPoint(float x, float y) {
+		return distance(x, y, this.position.x, this.position.y) < this.radius;
+	}
+
+	private float distance(float x0, float y0, float x1, float y1) {
 		return (float) Math.sqrt(Math.pow(x1 - x0, 2) + Math.pow(y1 - y0, 2));
 	}
 

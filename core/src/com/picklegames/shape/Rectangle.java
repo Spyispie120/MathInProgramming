@@ -25,24 +25,27 @@ public class Rectangle extends Shape{
 		sr.end();
 	}
 	
-	public boolean pointInRange(float x, float y, Rectangle rect){
-		return isInRange(x, rect.position.x, rect.position.x + rect.width) &&
-				isInRange(y, rect.position.y, rect.position.y + rect.height);
-	}
-	
-	public boolean isInRange(float value, float min, float max){
+	private boolean isInRange(float value, float min, float max){
 		return value >= min && value <= max;
 	}
 	
-	public boolean rangeIntersect(float min0, float max0, float min1, float max1){
+	private boolean rangeIntersect(float min0, float max0, float min1, float max1){
 		return max0 >= min1 && min0 <= max1;
 	}
 	
-	public boolean rectIntersect(Rectangle rect0, Rectangle rect1){
-		return rangeIntersect(rect0.position.x, rect0.position.x + rect0.width, rect1.position.x, rect1.position.x + rect1.width) &&
-				rangeIntersect(rect0.position.y, rect0.position.y + rect0.height, rect1.position.y, rect1.position.y + rect1.height);
+
+	@Override
+	public boolean collidedShape(Shape shape) {
+		return rangeIntersect(this.position.x, this.position.x + this.width, shape.position.x, shape.position.x + ((Rectangle)shape).width) &&
+			   rangeIntersect(this.position.y, this.position.y + this.height, shape.position.y, shape.position.y + ((Rectangle)shape).height);
 	}
 
+	@Override
+	public boolean collidedPoint(float x, float y) {
+		return isInRange(x, this.position.x, this.position.x + this.width) &&
+			   isInRange(y, this.position.y, this.position.y + this.height);
+	}
+	
 	public float getWidth() {
 		return width;
 	}
@@ -58,6 +61,8 @@ public class Rectangle extends Shape{
 	public void setHeight(float height) {
 		this.height = height;
 	}
+
+
 	
 	
 

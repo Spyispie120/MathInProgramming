@@ -36,6 +36,7 @@ public class Main extends ApplicationAdapter {
 				break;
 			case CD:
 				CD.update(dt);
+				break;
 		}
 
 	}
@@ -53,6 +54,7 @@ public class Main extends ApplicationAdapter {
 				break;
 			case CD:
 				CD.render();
+				break;
 		}
 
 	}
