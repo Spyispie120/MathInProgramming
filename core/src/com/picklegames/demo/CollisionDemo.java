@@ -10,65 +10,66 @@ public class CollisionDemo {
 	private ShapeRenderer sr;
 	private Circle circle0, circle1;
 	private Rectangle rectangle0, rectangle1;
-	
+
 	private enum TestState {
 		CirclePoint, CircleCircle, RectanglePoint, RectangleRectangle
 	}
 
 	private TestState testState;
 
-	public CollisionDemo(){
+	public CollisionDemo() {
 
 		sr = new ShapeRenderer();
-		
+
 		circle0 = new Circle(250, 250, 75);
 		circle1 = new Circle(250, 250, 75);
-		
+
 		rectangle0 = new Rectangle(250, 200, 100, 100);
 		rectangle1 = new Rectangle(400, 400, 100, 100);
 
-		testState = TestState.CirclePoint;
+		testState = TestState.CircleCircle;
 	}
-	
-	public void update(float dt){
+
+	public void update(float dt) {
 		if (testState.equals(TestState.RectanglePoint)) {
 			if (rectangle0.collidedPoint(Gdx.input.getX(), -Gdx.input.getY() + Gdx.graphics.getHeight())) {
-				sr.setColor(Color.RED);
+				rectangle0.setColor(Color.RED);
 			} else {
-				sr.setColor(Color.SKY);
+				rectangle0.setColor(Color.SKY);
 			}
 		} else if (testState.equals(TestState.RectangleRectangle)) {
 			rectangle1.setPosition(Gdx.input.getX() - rectangle1.getWidth() / 2,
 					-Gdx.input.getY() + Gdx.graphics.getHeight() - rectangle1.getHeight() / 2);
-			
+
 			if (rectangle0.collidedShape(rectangle1)) {
-				sr.setColor(Color.RED);
+				rectangle0.setColor(Color.RED);
+				rectangle1.setColor(Color.RED);
 			} else {
-				sr.setColor(Color.CYAN);
+				rectangle0.setColor(Color.CYAN);
+				rectangle1.setColor(Color.CYAN);
 			}
 		} else if (testState.equals(TestState.CirclePoint)) {
-
+			System.out.println(circle0.getColor().toString());
 			if (circle0.collidedPoint(Gdx.input.getX(), -Gdx.input.getY() + Gdx.graphics.getHeight())) {
-				sr.setColor(Color.RED);
+				circle0.setColor(Color.RED);
 			} else {
-				sr.setColor(Color.SKY);
+				circle0.setColor(Color.SKY);
 			}
 		} else {
-			circle1.setPosition(Gdx.input.getX(),
-					-Gdx.input.getY() + Gdx.graphics.getHeight());
-			
+			circle1.setPosition(Gdx.input.getX(), -Gdx.input.getY() + Gdx.graphics.getHeight());
 			circle1.update();
-
 			if (circle0.collidedShape(circle1)) {
-				sr.setColor(Color.RED);
+				circle0.setColor(Color.RED);
+				circle1.setColor(Color.RED);
 			} else {
-				sr.setColor(Color.CYAN);
+				circle0.setColor(Color.CYAN);
+				circle1.setColor(Color.CYAN);
 			}
 		}
 	}
-	
-	public void render(){
-		
+
+	public void render() {
+
 		if (testState.equals(TestState.RectanglePoint)) {
 			rectangle0.render(sr);
 		} else if (testState.equals(TestState.RectangleRectangle)) {
@@ -80,9 +81,7 @@ public class CollisionDemo {
 			circle0.render(sr);
 			circle1.render(sr);
 		}
-		
+
 	}
 
 }
-
-

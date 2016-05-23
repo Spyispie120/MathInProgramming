@@ -20,7 +20,7 @@ public class Rectangle extends Shape{
 	public void render(ShapeRenderer sr) {
 		// TODO Auto-generated method stub
 		sr.begin(ShapeType.Filled);
-		//sr.setColor(color);
+		sr.setColor(color);
 		sr.rect(position.x, position.y, width, height);
 		sr.end();
 	}

@@ -17,7 +17,7 @@ public class Main extends ApplicationAdapter {
 		TED, CD
 	}
 
-	DemoState demoState = DemoState.CD;
+	DemoState demoState = DemoState.TED;
 
 	@Override
 	public void create() {

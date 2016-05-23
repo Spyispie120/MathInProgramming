@@ -7,7 +7,8 @@ import aurelienribon.tweenengine.TweenAccessor;
 
 public class ShapeAccessor implements TweenAccessor<Shape> {
 	public static final int XY = 1;
-	public static final int A = 2;
+	public static final int X = 2;
+	public static final int A = 3;
 
 	@Override
 	public int getValues(Shape target, int tweenType, float[] returnValues) {
@@ -16,6 +17,9 @@ public class ShapeAccessor implements TweenAccessor<Shape> {
 			returnValues[0] = target.getPosition().x;
 			returnValues[1] = target.getPosition().y;
 			return 2;
+		case X:
+			returnValues[0] = target.getPosition().x;
+			return 1;
 		case A:
 			returnValues[0] = target.getColor().a;
 			return 1;
@@ -28,6 +32,9 @@ public class ShapeAccessor implements TweenAccessor<Shape> {
 		switch (tweenType) {
 		case XY:
 			target.setPosition(newValues[0], newValues[1]);
+			break;
+		case X:
+			target.setPosition(newValues[0], target.getPosition().y);
 			break;
 		case A:
 			target.setColor(new Color(target.getColor().r,
