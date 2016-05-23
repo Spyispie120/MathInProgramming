@@ -23,4 +23,13 @@ public abstract class Shape {
 	public Vector2 getPosition() {
 		return position;
 	}
+	
+	public Color getColor() {
+		return color;
+	}
+
+	public void setColor(Color color) {
+		this.color = color;
+	}
+
 }

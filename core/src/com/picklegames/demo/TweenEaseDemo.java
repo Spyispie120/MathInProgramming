@@ -6,14 +6,28 @@ import java.util.List;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.picklegames.Easing;
+import com.picklegames.Tweening.Easing;
+import com.picklegames.Tweening.FontAccessor;
+import com.picklegames.Tweening.ShapeAccessor;
 import com.picklegames.shape.Circle;
 import com.picklegames.shape.Shape;
 
+import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenEquations;
+import aurelienribon.tweenengine.TweenManager;
+
 public class TweenEaseDemo implements InputProcessor {
 	private ShapeRenderer sr;
+	private TweenManager tweenManagerBall, tweenManagerText;
+	private BitmapFont font;
+	private GlyphLayout layout;
+	
 	private List<Shape> shapes;
 	private boolean isTween = false;
 	private Shape cir1;
@@ -23,9 +37,20 @@ public class TweenEaseDemo implements InputProcessor {
 	private Vector2 originalPosition = new Vector2();
 
 	public TweenEaseDemo() {
+		Tween.registerAccessor(Shape.class, new ShapeAccessor());
+		Tween.registerAccessor(BitmapFont.class, new FontAccessor());
+		
 		sr = new ShapeRenderer();
-
-		cir1 = new Circle(0, 0, 5);
+		tweenManagerBall = new TweenManager();
+		tweenManagerText = new TweenManager();
+		
+		font = new BitmapFont(Gdx.files.internal("font/comicsan.fnt"));
+		font.setColor(Color.WHITE);
+		font.getData().scaleX = 2f;
+		font.getData().scaleY = 2f;
+		layout = new GlyphLayout(); 
+		
+		cir1 = new Circle(50, 50, 10);
 		originalPosition.set(cir1.getPosition());
 
 		shapes = new ArrayList<Shape>();
@@ -44,7 +69,7 @@ public class TweenEaseDemo implements InputProcessor {
 	float changeX;
 	float changeY;
 
-	public void update(float dt) {
+	public void demo1(float dt) {
 		mousePosition.set(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
 		target = mouseClick;
 
@@ -68,12 +93,55 @@ public class TweenEaseDemo implements InputProcessor {
 		}
 	}
 
-	public void render() {
-		cir1.render(sr);
+	public void demo2(float dt) {
 
-		// for (Shape s : shapes) {
-		// s.render(sr);
-		// }
+		isTween = false;
+		
+		Tween.set(font, FontAccessor.COLOR).target(Color.RED.r,Color.RED.g,Color.RED.b).delay(1f).start(tweenManagerText);
+		Tween.set(font, FontAccessor.COLOR).target(Color.ORANGE.r,Color.ORANGE.g,Color.ORANGE.b).delay(2f).start(tweenManagerText);
+		Tween.set(font, FontAccessor.COLOR).target(Color.YELLOW.r,Color.YELLOW.g,Color.YELLOW.b).delay(3f).start(tweenManagerText);
+		Tween.set(font, FontAccessor.COLOR).target(Color.GREEN.r,Color.GREEN.g,Color.GREEN.b).delay(4f).start(tweenManagerText);
+		Tween.set(font, FontAccessor.COLOR).target(Color.BLUE.r,Color.BLUE.g,Color.BLUE.b).delay(5f).start(tweenManagerText);
+		Tween.set(font, FontAccessor.COLOR).target(Color.VIOLET.r,Color.VIOLET.g,Color.VIOLET.b).delay(6f).start(tweenManagerText);
+		
+		Tween.to(cir1, ShapeAccessor.XY, 2f).target(50, Gdx.graphics.getHeight() - 50).ease(TweenEquations.easeInBounce)
+				.start(tweenManagerBall);
+		Tween.to(cir1, ShapeAccessor.XY, 2f).target(Gdx.graphics.getWidth() - 50, Gdx.graphics.getHeight() - 50)
+				.delay(2f).ease(TweenEquations.easeInElastic).start(tweenManagerBall);
+		Tween.to(cir1, ShapeAccessor.XY, 2f).target(Gdx.graphics.getWidth() - 50, 50).delay(4f)
+				.ease(TweenEquations.easeInOutExpo).start(tweenManagerBall);
+		Tween.to(cir1, ShapeAccessor.XY, 2f).target(50, 50).delay(6f).ease(TweenEquations.easeInSine).start(tweenManagerBall);
+
+	}
+
+	public void update(float dt) {
+		tweenManagerBall.update(dt);
+		tweenManagerText.update(dt);
+		System.out.println(tweenManagerBall.size());
+
+		if (isTween) {
+			demo2(dt);
+		}
+
+		if (tweenManagerBall.size() == 0) {
+			isTween = true;
+		}
+
+		// demo1(dt);
+
+	}
+
+	public void render(SpriteBatch batch) {
+		
+		layout.setText(font, "Calculus AB");
+		float width = layout.width;
+		float height = layout.height;
+		
+		cir1.render(sr);
+		
+		batch.begin();
+		font.draw(batch, "Calculus AB", Gdx.graphics.getWidth() / 2 - width / 2, Gdx.graphics.getHeight() / 2 + height);
+		batch.end();
 	}
 
 	public float easeTo(float t, float b, float c, float d) {

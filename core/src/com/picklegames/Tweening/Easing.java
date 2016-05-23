@@ -1,4 +1,4 @@
-package com.picklegames;
+package com.picklegames.Tweening;
 
 public class Easing {
 	public static float easeLinear (float t,float b , float c, float d) {

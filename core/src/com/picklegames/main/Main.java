@@ -5,8 +5,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.picklegames.demo.TweenEaseDemo;
 import com.picklegames.entities.Box;
 import com.picklegames.entities.RoundShape;
@@ -35,7 +33,7 @@ public class Main extends ApplicationAdapter {
 		circle0 = new RoundShape(250, 250, 75);
 		circle1 = new RoundShape(250, 250, 75);
 
-		testState = TestState.CircleCircle;
+		testState = TestState.TweenDemo;
 	}
 
 	public void update(float dt) {
@@ -84,10 +82,10 @@ public class Main extends ApplicationAdapter {
 			}
 		}
 
-		System.out.println("CIRCLE_X: " + circle0.getCircle().x + " CIRCLE_Y: " + circle0.getCircle().y);
-		System.out.println("CIRCLE_RADIUS: " + circle0.getCircle().radius);
-		System.out.println(
-				"MOUSE_X: " + Gdx.input.getX() + " MOUSE_Y: " + (-Gdx.input.getY() + Gdx.graphics.getHeight()));
+//		System.out.println("CIRCLE_X: " + circle0.getCircle().x + " CIRCLE_Y: " + circle0.getCircle().y);
+//		System.out.println("CIRCLE_RADIUS: " + circle0.getCircle().radius);
+//		System.out.println(
+//				"MOUSE_X: " + Gdx.input.getX() + " MOUSE_Y: " + (-Gdx.input.getY() + Gdx.graphics.getHeight()));
 
 	}
 
@@ -119,7 +117,7 @@ public class Main extends ApplicationAdapter {
 	
 		if (testState.equals(TestState.TweenDemo)) {
 			TED.update(Gdx.graphics.getDeltaTime());
-			TED.render();
+			TED.render(batch);
 		}
 	}
 
