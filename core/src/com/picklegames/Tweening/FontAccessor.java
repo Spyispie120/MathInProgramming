@@ -8,7 +8,8 @@ public class FontAccessor implements TweenAccessor<BitmapFont> {
 
 	public static final int ALPHA = 1;
 	public static final int SCALE = 2;
-	public static final int COLOR = 3;
+	public static final int SCALEX = 3;
+	public static final int COLOR = 4;
 
 	@Override
 	public int getValues(BitmapFont target, int tweenType, float[] returnValues) {
@@ -20,6 +21,9 @@ public class FontAccessor implements TweenAccessor<BitmapFont> {
 			returnValues[0] = target.getData().scaleX;
 			returnValues[1] = target.getData().scaleY;
 			return 2;
+		case SCALEX:
+			returnValues[0] = target.getData().scaleX;
+			return 1;
 		case COLOR:
 			returnValues[0] = target.getColor().r;
 			returnValues[1] = target.getColor().g;
@@ -39,6 +43,10 @@ public class FontAccessor implements TweenAccessor<BitmapFont> {
 		case SCALE:
 			//System.out.println(newValues[0] + " "+ newValues[1]);
 			target.getData().setScale(newValues[0], newValues[1]);
+			break;
+		case SCALEX:
+			//System.out.println(newValues[0] + " "+ newValues[1]);
+			target.getData().setScale(newValues[0],target.getScaleY());
 			break;
 		case COLOR:
 			//System.out.println(newValues[0] + " "+ newValues[1]);

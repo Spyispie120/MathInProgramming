@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.picklegames.Tweening.Easing;
+import com.picklegames.Tweening.FloatAccessor;
 import com.picklegames.Tweening.FontAccessor;
 import com.picklegames.Tweening.ShapeAccessor;
 import com.picklegames.shape.Circle;
@@ -26,7 +27,7 @@ import aurelienribon.tweenengine.TweenManager;
 public class TweenEaseDemo implements InputProcessor {
 	private ShapeRenderer sr;
 	private TweenManager tweenManagerBall, tweenManagerText;
-	private BitmapFont font;
+	private BitmapFont font, font2;
 	private GlyphLayout layout;
 
 	private List<Shape> shapes;
@@ -41,9 +42,10 @@ public class TweenEaseDemo implements InputProcessor {
 		demo1, demo2, demo3
 	}
 
-	DemoCase demoCase = DemoCase.demo1;
+	DemoCase demoCase = DemoCase.demo2;
 
 	private Color[] colors = new Color[] { Color.RED, Color.BLUE, Color.GREEN, Color.PURPLE, Color.ORANGE };
+	
 	private TweenEquation[] tweenEquation = new TweenEquation[] { 
 													TweenEquations.easeNone, TweenEquations.easeInQuad,
 													TweenEquations.easeInCubic, TweenEquations.easeInQuart,
@@ -52,15 +54,22 @@ public class TweenEaseDemo implements InputProcessor {
 	public TweenEaseDemo() {
 		Tween.registerAccessor(Shape.class, new ShapeAccessor());
 		Tween.registerAccessor(BitmapFont.class, new FontAccessor());
-
+		Tween.registerAccessor(Float.class, new FloatAccessor());
+		
 		sr = new ShapeRenderer();
 		tweenManagerBall = new TweenManager();
 		tweenManagerText = new TweenManager();
 
 		font = new BitmapFont(Gdx.files.internal("font/comicsan.fnt"));
+		font2 = new BitmapFont(Gdx.files.internal("font/comicsan.fnt"));
 		font.setColor(Color.WHITE);
 		font.getData().scaleX = 2f;
 		font.getData().scaleY = 2f;
+		
+		font2.setColor(Color.WHITE);
+		font2.getData().scaleX = 1f;
+		font2.getData().scaleY = 1f;
+		
 		layout = new GlyphLayout();
 
 		cir1 = new Circle(50, 50, 10);
@@ -88,16 +97,16 @@ public class TweenEaseDemo implements InputProcessor {
 	public void demo1(float dt) {
 		mousePosition.set(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
 		target = mouseClick;
-
-		System.out.println(timeElapsed);
-		System.out.println(changeX + " " + changeY);
+//
+//		System.out.println(timeElapsed);
+//		System.out.println(changeX + " " + changeY);
 		if (isTween) {
 			timeElapsed += dt;
 
 			if (timeElapsed < DURATION) {
 
 				cir1.setPosition(easeTo(timeElapsed, originalPosition.x, changeX, DURATION),
-						easeTo(timeElapsed, originalPosition.y, changeY, DURATION));
+							 	 easeTo(timeElapsed, originalPosition.y, changeY, DURATION));
 
 			} else {
 				timeElapsed = 0;
@@ -112,8 +121,11 @@ public class TweenEaseDemo implements InputProcessor {
 	public void demo2(float dt) {
 
 		isTween = false;
-		Tween.to(font, FontAccessor.SCALE, .5f).target(3f, 3f).ease(TweenEquations.easeNone).repeatYoyo(20, 0f)
+		Tween.to(font, FontAccessor.SCALE, .25f).target(3f, 3f).ease(TweenEquations.easeNone).repeatYoyo(20, 0f)
 				.start(tweenManagerText);
+
+		Tween.to(font2, FontAccessor.SCALEX, .25f).target(4f).ease(TweenEquations.easeNone).repeatYoyo(20, 0f)
+		.start(tweenManagerText);
 
 		Tween.set(font, FontAccessor.COLOR).target(Color.RED.r, Color.RED.g, Color.RED.b).delay(1f)
 				.start(tweenManagerText);
@@ -194,25 +206,46 @@ public class TweenEaseDemo implements InputProcessor {
 	}
 
 	public void render(SpriteBatch batch) {
+		float width = 0;
+		float height = 0;
 		switch (demoCase) {
 		case demo1:
 			cir1.render(sr);
+			layout.setText(font, "Ease Quad");
+			font.setColor(Color.RED);
+			width = layout.width;
+			height = layout.height;
+			
+			batch.begin();
+			font.draw(batch, "Ease Quad", Gdx.graphics.getWidth() / 2 - width / 2, Gdx.graphics.getHeight() / 2 - height / 2);
+			batch.end();
 			break;
 		case demo2:
 			layout.setText(font, "Calculus AB");
-			float width = layout.width;
-			float height = layout.height;
+			width = layout.width;
+			height = layout.height;
 
 			cir1.render(sr);
 
 			batch.begin();
 			font.draw(batch, "Calculus AB", Gdx.graphics.getWidth() / 2 - width / 2,
-					Gdx.graphics.getHeight() / 2 + height);
+											Gdx.graphics.getHeight() / 2 + height);
+			font2.draw(batch, "2015-2016", Gdx.graphics.getWidth() / 2 - width / 2,
+										   Gdx.graphics.getHeight() / 2 - height * 2);
 			batch.end();
+
+			
 			break;
 		case demo3:
-			for (Shape s : shapes) {
+			font.getData().scaleX = 1f;
+			font.getData().scaleY = 1f;
+			for (int i = 0; i < shapes.size(); i++) {
+				Shape s = shapes.get(i);
 				s.render(sr);
+				batch.begin();
+				font.setColor(colors[i]);
+				font.draw(batch, tweenEquation[i].toString(), 50, s.getPosition().y + 45);
+				batch.end();
 			}
 			break;
 		default:
@@ -222,7 +255,7 @@ public class TweenEaseDemo implements InputProcessor {
 	}
 
 	public float easeTo(float t, float b, float c, float d) {
-		return Easing.easeInCos(t, b, c, d);
+		return Easing.easeInQuad(t, b, c, d);
 	}
 
 	public void easeTo(Shape shape, Vector2 target) {
