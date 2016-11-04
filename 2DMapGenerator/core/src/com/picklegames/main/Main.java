@@ -46,7 +46,9 @@ public class Main extends ApplicationAdapter {
 			return MapConstant.DEEPWATER;
 		}else if(value > 0.4 && value <= 0.5){
 			return MapConstant.SHALLOWWATER;
-		}else if(value > 0.5 && value <= 0.7){
+		}else if(value > 0.5 && value <= 0.55){
+			return MapConstant.LANDHIGHTLIGHT;
+		}else if(value > 0.55 && value <= 0.7){
 			return MapConstant.LAND;
 		}else if(value > 0.7 && value <= 0.8){
 			return MapConstant.MOUNTAIN;
